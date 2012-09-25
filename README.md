@@ -1,5 +1,4 @@
-Names of both team members
-
+Dylan Lederle-Ensign
 
 Number of slip days used (this project)/(total)
 
