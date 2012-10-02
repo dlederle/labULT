@@ -1,3 +1,7 @@
 *.o
 *.a
-
+alarmHelper
+doTest
+doTest2
+parseUcontext
+showHandler

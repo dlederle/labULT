@@ -1,0 +1,12 @@
+ULT_Yield
+
+  Which thread to run
+    get context
+  save context
+    alter the program counter(EIP)
+  set context for the new thread
+    new thread starts executing immediately
+
+
+ULT_CreateThread
+    
