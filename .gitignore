@@ -1,5 +1,6 @@
 *.o
 *.a
+a.out
 alarmHelper
 doTest
 doTest2
