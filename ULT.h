@@ -10,9 +10,13 @@ typedef int Tid;
 
 typedef struct ThrdCtlBlk{
   /* ... Fill this in ... */
+	Tid tid;
+	ucontext_t context;
+
 } ThrdCtlBlk;
 
-
+ThrdCtlBlk *blocks[ULT_MAX_THREADS];
+ThrdCtlBlk current; 
 /*
  * Tids between 0 and ULT_MAX_THREADS-1 may
  * refer to specific threads and negative Tids

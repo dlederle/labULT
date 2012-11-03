@@ -10,9 +10,7 @@
 
 
 
-
-Tid 
-ULT_CreateThread(void (*fn)(void *), void *parg)
+Tid ULT_CreateThread(void (*fn)(void *), void *parg)
 {
   assert(0); /* TBD */
   return ULT_FAILED;
@@ -22,8 +20,36 @@ ULT_CreateThread(void (*fn)(void *), void *parg)
 
 Tid ULT_Yield(Tid wantTid)
 {
-  assert(0); /* TBD */
-  return ULT_FAILED;
+  int i;
+  if(wantTid == ULT_SELF) {
+    wantTid = current.tid;    
+  }
+  if(wantTid == ULT_ANY) {
+    for(i = 0;i < ULT_MAX_THREADS;i++) {
+      if(blocks[i]) {
+        wantTid = i; 
+        break; 
+      }
+    }
+    if(wantTid == ULT_ANY) {
+      return ULT_NONE; 
+    }
+  }
+  if(!blocks[wantTid]) {
+    return ULT_INVALID; 
+  }
+  ucontext_t mycontext;
+  int err = getcontext(&mycontext);
+  assert(!err); /* TBD */
+
+  mycontext.uc_mcontext.gregs[REG_EIP]++;
+  current.context = mycontext;
+  current.tid = wantTid; 
+  setcontext(&(blocks[wantTid]->context)); 
+  
+    
+ 
+  return wantTid;
 
 }
 
