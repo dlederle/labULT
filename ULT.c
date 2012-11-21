@@ -9,10 +9,19 @@
 #include "ULT.h"
 
 
+stub(void(*root)(void*), void *arg)
+{
+	Tid ret;
+	root(arg);
+	ret = ULT_DestroyThread(ULT_SELF);
+	assert(ret == ULT_NONE); /* TBD */
+	exit(0);
+}  
 
 Tid ULT_CreateThread(void (*fn)(void *), void *parg)
 {
-  assert(0); /* TBD */
+	stub(fn, parg);
+	assert(0);
   return ULT_FAILED;
 }
 
@@ -21,8 +30,8 @@ Tid ULT_CreateThread(void (*fn)(void *), void *parg)
 Tid ULT_Yield(Tid wantTid)
 {
   int i;
-  if(wantTid == ULT_SELF) {
-    wantTid = current.tid;    
+  if(wantTid == ULT_SELF || current.tid == wantTid) {
+    return current.tid;    
   }
   if(wantTid == ULT_ANY) {
     for(i = 0;i < ULT_MAX_THREADS;i++) {
@@ -35,9 +44,10 @@ Tid ULT_Yield(Tid wantTid)
       return ULT_NONE; 
     }
   }
-  if(!blocks[wantTid]) {
+  if(wantTid < 0 || wantTid >= ULT_MAX_THREADS || !blocks[wantTid]) {
     return ULT_INVALID; 
   }
+
   ucontext_t mycontext;
   int err = getcontext(&mycontext);
   assert(!err); /* TBD */
@@ -47,7 +57,6 @@ Tid ULT_Yield(Tid wantTid)
   current.tid = wantTid; 
   setcontext(&(blocks[wantTid]->context)); 
   
-    
  
   return wantTid;
 
